@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrgnizationMapper">
+	
+	<resultMap type="com.fh.entity.hardworking.orgnization.Orgnization" id="orgnizationResultMap">
+		<id column="ORGNIZATION_ID" property="ORGNIZATION_ID"/>
+		<result column="ORGNAME" property="ORGNAME"/>
+		<result column="ORGCODE" property="ORGCODE"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into "TB_ORGNIZATION"(
+			"ORGCODE",	
+			"ORGNAME",	
+			"CREATEDATE",	
+			"STATUS",	
+			"RANK",	
+			"ORGNIZATION_ID"
+		) values (
+			#{ORGCODE},	
+			#{ORGNAME},	
+			#{CREATEDATE},	
+			#{STATUS},	
+			#{RANK},	
+			#{ORGNIZATION_ID}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from "TB_ORGNIZATION"
+		where 
+			"ORGNIZATION_ID" = #{ORGNIZATION_ID}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  "TB_ORGNIZATION"
+			set 
+				"ORGCODE" = #{ORGCODE},	
+				"ORGNAME" = #{ORGNAME},	
+				"CREATEDATE" = #{CREATEDATE},	
+				"STATUS" = #{STATUS},	
+				"RANK" = #{RANK},	
+			"ORGNIZATION_ID" = "ORGNIZATION_ID"
+			where 
+				"ORGNIZATION_ID" = #{ORGNIZATION_ID}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			"ORGCODE",	
+			"ORGNAME",	
+			"CREATEDATE",	
+			"STATUS",	
+			"RANK",	
+			"ORGNIZATION_ID"
+		from 
+			"TB_ORGNIZATION"
+		where 
+			"ORGNIZATION_ID" = #{ORGNIZATION_ID}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a."ORGCODE",	
+				a."ORGNAME",	
+				a."CREATEDATE",	
+				a."STATUS",	
+				a."RANK",	
+				a."ORGNIZATION_ID"
+		from 
+				"TB_ORGNIZATION" a
+				where 1 = 1  
+		<if test="pd.ORGNAME != null and pd.ORGNAME != ''"><!-- 关键词检索 -->
+			and 
+				a."ORGNAME" LIKE CONCAT(CONCAT('%', #{pd.ORGNAME}),'%')
+		</if>
+		<if test="pd.ORGNAME_SE != null and pd.ORGNAME_SE != ''"><!-- 关键词检索 -->
+			and 
+				a."ORGNAME" LIKE CONCAT(CONCAT('%', #{pd.ORGNAME_SE}),'%')
+		</if>
+		ORDER BY TO_NUMBER(RANK)
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a."ORGCODE",	
+				a."ORGNAME",	
+				a."CREATEDATE",	
+				a."STATUS",	
+				a."RANK",	
+				a."ORGNIZATION_ID"
+		from 
+				"TB_ORGNIZATION" a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from "TB_ORGNIZATION"
+		where 
+			"ORGNIZATION_ID" in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 列出所有学院  用于下拉列表-->
+	<select id="listAllOrgnizations" resultMap="orgnizationResultMap">
+		select
+				a."ORGCODE",	
+				a."ORGNAME",	
+				a."CREATEDATE",	
+				a."STATUS",	
+				a."RANK",	
+				a."ORGNIZATION_ID"
+		from 
+				"TB_ORGNIZATION" a
+				ORDER BY TO_NUMBER(RANK)
+	</select>
+	
+	<!-- 获取最大id -->
+	<select id="findMaxId" parameterType="pd" resultType="pd">
+		select "MAX"(TO_NUMBER("ORGNIZATION_ID")) "UID" FROM "TB_ORGNIZATION"
+	</select>
+	
+</mapper>

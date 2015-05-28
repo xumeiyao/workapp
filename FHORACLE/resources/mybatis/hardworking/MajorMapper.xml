@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MajorMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into "TB_MAJOR"(
+			"ZYH",	
+			"ZYMC",	
+			"ZYJC",	
+			"ZYYWMC",	
+			"ORGNIZATION_ID",	
+			"MAJOR_ID"
+		) values (
+			#{ZYH},	
+			#{ZYMC},	
+			#{ZYJC},	
+			#{ZYYWMC},	
+			#{ORGNIZATION_ID},	
+			#{MAJOR_ID}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from "TB_MAJOR"
+		where 
+			"MAJOR_ID" = #{MAJOR_ID}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  "TB_MAJOR"
+			set 
+				"ZYH" = #{ZYH},	
+				"ZYMC" = #{ZYMC},	
+				"ZYJC" = #{ZYJC},	
+				"ZYYWMC" = #{ZYYWMC},	
+				"ORGNIZATION_ID" = #{ORGNIZATION_ID},	
+			"MAJOR_ID" = "MAJOR_ID"
+			where 
+				"MAJOR_ID" = #{MAJOR_ID}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			"ZYH",	
+			"ZYMC",	
+			"ZYJC",	
+			"ZYYWMC",	
+			"ORGNIZATION_ID",	
+			"MAJOR_ID"
+		from 
+			"TB_MAJOR"
+		where 
+			"MAJOR_ID" = #{MAJOR_ID}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a."ZYH",	
+				a."ZYMC",	
+				a."ZYJC",	
+				a."ZYYWMC",	
+				o."ORGNAME",	
+				a."MAJOR_ID"
+		from 
+				"TB_MAJOR" a
+		left join "TB_ORGNIZATION" o
+		on o."ORGNIZATION_ID" = a."ORGNIZATION_ID"
+		where 1=1 
+		<if test="pd.ORGNAME_SE != null and pd.ORGNAME_SE != ''"><!-- 关键词检索 -->
+			and 
+				o."ORGNAME" = #{pd.ORGNAME_SE}
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a."ZYH",	
+				a."ZYMC",	
+				a."ZYJC",	
+				a."ZYYWMC",	
+				a."ORGNIZATION_ID",	
+				a."MAJOR_ID"
+		from 
+				"TB_MAJOR" a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from "TB_MAJOR"
+		where 
+			"MAJOR_ID" in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 获取最大id -->
+	<select id="findMaxId" parameterType="pd" resultType="pd">
+		select "MAX"("MAJOR_ID") "UID" FROM "TB_MAJOR"
+	</select>
+	
+	<!-- 查询学院表的id  用于导入数据 -->
+<!-- 	<select id="queryOrgnizationId" parameterType="List" > -->
+<!-- 		select -->
+<!-- 				o."ORGNIZATION_ID" ORGNIZATIONID -->
+<!-- 		from  -->
+<!-- 				"TB_ORGNIZATION" o -->
+<!-- 		where o."ORGNAME" = -->
+		
+<!-- 		<foreach collection="String" item="orgnizationId"  open="(" separator="," close=")">   -->
+<!--         	#{orgnization_Id}   -->
+<!--      	</foreach>   -->
+				
+<!-- 	</select> -->
+
+	<!-- 查询学院表的id  用于导入数据 -->
+	<select id="queryOrgnizationId" parameterType="string" resultType='string' >
+        select
+				o."ORGNIZATION_ID" ORGNIZATIONID
+		from 
+				"TB_ORGNIZATION" o
+		where o."ORGNAME" = #{orgnization_Id}
+	</select>
+	
+</mapper>

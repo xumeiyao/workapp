@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EvaluateSystemMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into "TB_EVALUATESYSTEM"(
+			"TXMC",	
+			"ZD_ID",	
+			"EVALUATESYSTEM_ID"
+		) values (
+			#{TXMC,jdbcType=VARCHAR},	
+			#{ZD_ID,jdbcType=VARCHAR},	
+			#{EVALUATESYSTEM_ID,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from "TB_EVALUATESYSTEM"
+		where 
+			"EVALUATESYSTEM_ID" = #{EVALUATESYSTEM_ID}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  "TB_EVALUATESYSTEM"
+			set 
+				"TXMC" = #{TXMC},	
+				"ZD_ID" = #{ZD_ID},	
+			"EVALUATESYSTEM_ID" = "EVALUATESYSTEM_ID"
+			where 
+				"EVALUATESYSTEM_ID" = #{EVALUATESYSTEM_ID}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			"TXMC",	
+			"ZD_ID",	
+			"EVALUATESYSTEM_ID"
+		from 
+			"TB_EVALUATESYSTEM"
+		where 
+			"EVALUATESYSTEM_ID" = #{EVALUATESYSTEM_ID}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a."TXMC",	
+				a."ZD_ID",	
+				a."EVALUATESYSTEM_ID"
+		from 
+				"TB_EVALUATESYSTEM" a
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a."TXMC",	
+				a."ZD_ID",	
+				a."EVALUATESYSTEM_ID"
+		from 
+				"TB_EVALUATESYSTEM" a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from "TB_EVALUATESYSTEM"
+		where 
+			"EVALUATESYSTEM_ID" in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	
+	
+</mapper>
